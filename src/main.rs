@@ -104,7 +104,7 @@ fn main() {
         });
 
     let proverbs_list = proverbs_file_contents
-        .split('%')
+        .split("\n%\n")
         .map(|s| s.trim())
         .filter(|s| !s.is_empty())
         .collect::<Vec<_>>();

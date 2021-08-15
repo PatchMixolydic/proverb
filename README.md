@@ -35,6 +35,9 @@ A proverb.
 Another proverb!
 ```
 
+Proverbs are UTF-8 strings separated by a line containing only `%`
+(in other words, proverbs are separated by `\n%\n`).
+
 Differences include:
 * A trailing percent sign is not required (though is accepted).
 * `.dat` files are not required (or used). Proverb files are most likely small
