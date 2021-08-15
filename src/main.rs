@@ -39,6 +39,10 @@ fn source_directories() -> Vec<Cow<'static, Path>> {
     #[cfg(debug_assertions)]
     res.push(Path::new("./proverb").into());
 
+    // Remove any duplicates (in case our prefix is something like `/usr`)
+    res.sort_unstable();
+    res.dedup();
+
     res
 }
 
