@@ -35,9 +35,9 @@ fn source_directories() -> Vec<Cow<'static, Path>> {
         res.push(prefix.join("share").join("proverb").into());
     }
 
-    // For ease of debugging
+    // For ease of debugging, use the local data directory
     #[cfg(debug_assertions)]
-    res.push(Path::new("./proverb").into());
+    res.push(Path::new("./proverb_files").into());
 
     // Remove any duplicates (in case our prefix is something like `/usr`)
     res.sort_unstable();

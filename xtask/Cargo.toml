@@ -1,0 +1,12 @@
+[package]
+name = "xtask"
+description = "Perform build tasks"
+license = "MIT OR Apache-2.0"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+anyhow = "1.0.43"
+clap = "3.0.0-beta.4"
+directories = "3.0.2"
+duct = "0.13.5"
