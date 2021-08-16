@@ -29,8 +29,11 @@ pub(crate) fn install(args: Install) -> anyhow::Result<()> {
     let bin_dir = prefix.join("bin");
     let data_dir = prefix.join("share").join("proverb");
 
-    // run `cargo clean` so we can bake the correct path into the binary
-    display_cmd!("cargo", "clean", "--release").run()?;
+    if !args.skip_clean {
+        // run `cargo clean` so we can bake the correct path into the binary
+        display_cmd!("cargo", "clean", "--release").run()?;
+    }
+
     display_cmd!(
         "cargo",
         "build",

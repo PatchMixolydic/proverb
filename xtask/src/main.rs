@@ -25,6 +25,13 @@ enum Subcommand {
 #[derive(Clap)]
 #[clap(setting = AppSettings::ColoredHelp)]
 struct Install {
+    /// Don't run `cargo clean --release`.
+    /// 
+    /// This might result in unexpected behaviour.
+    /// Please be cautious!
+    #[clap(short, long)]
+    skip_clean: bool,
+
     prefix: Option<PathBuf>,
 }
 
