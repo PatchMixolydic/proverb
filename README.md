@@ -76,3 +76,6 @@ of this project, still appear to permitted by the aforementioned guidelines.
 
 ## Where are the offensive proverbs?
 no
+
+<small>(These proverb files *do*, however, contain swear words, which might be
+inappropriate for younger audiences.)</small>
