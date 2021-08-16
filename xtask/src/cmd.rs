@@ -71,7 +71,15 @@ impl fmt::Display for DisplayCmd {
         self.name.to_string_lossy().fmt(f)?;
         self.args
             .iter()
-            .map(|arg| write!(f, " {}", arg.to_string_lossy()))
+            .map(|arg| {
+                let arg = arg.to_string_lossy();
+                // Quote any arguments that contain spaces
+                if arg.contains(' ') {
+                    write!(f, " '{}'", arg)
+                } else {
+                    write!(f, " {}", arg)
+                }
+            })
             .collect()
     }
 }
