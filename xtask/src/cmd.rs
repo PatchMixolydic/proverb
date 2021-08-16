@@ -1,12 +1,17 @@
 use duct::cmd;
 use std::{ffi::OsString, fmt, io};
 
+/// Creates a [DisplayCmd instance].
+///
+/// Arguments must implement `Into<`[`OsString`]`>`.
 macro_rules! display_cmd {
     ($name:expr $(, $arg:expr)* $(,)?) => {
         $crate::cmd::DisplayCmd::new($name)$(.arg($arg))*
     };
 }
 
+/// A representation of a shell command that implements
+/// [`Display`][fmt::Display].
 #[derive(Clone)]
 pub(crate) struct DisplayCmd {
     name: OsString,
@@ -35,6 +40,11 @@ impl DisplayCmd {
         self
     }
 
+    /// Prepend `name` to this command.
+    ///
+    /// Essentially, this funtion sets the command name to `name`,
+    /// makes the old command name into the first argument, and pushes
+    /// every other argument forward by one.
     pub(crate) fn prepend(self, name: impl Into<OsString>) -> Self {
         let args = std::iter::once(self.name)
             .chain(self.args.into_iter())
@@ -46,6 +56,11 @@ impl DisplayCmd {
         }
     }
 
+    /// Runs this command.
+    ///
+    /// Returns [`io::Error`] if an error occurs when trying to run
+    /// the command or if the command runs, but exits with a non-zero
+    /// exit code.
     pub(crate) fn run(&self) -> io::Result<()> {
         cmd(&self.name, &self.args).run().map(|_| ())
     }
