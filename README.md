@@ -1,7 +1,8 @@
 # proverb
 Print a random, likely uninteresting, adage.
 
-~~Blatant ripoff of~~ Inspired by `fortune(6)`.
+~~Blatant ripoff of~~ Inspired by `fortune(6)`. Wraps proverbs to fit your
+terminal for your reading convenience.
 
 ## Building and installing
 For debugging, simply use `cargo run`.
