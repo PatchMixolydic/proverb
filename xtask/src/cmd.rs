@@ -1,7 +1,7 @@
 use duct::cmd;
 use std::{ffi::OsString, fmt, io};
 
-/// Creates a [DisplayCmd instance].
+/// Creates a [`DisplayCmd`] instance.
 ///
 /// Arguments must implement `Into<`[`OsString`]`>`.
 macro_rules! display_cmd {
