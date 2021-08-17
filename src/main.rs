@@ -81,7 +81,7 @@ fn main() {
         .collect::<Vec<_>>();
 
     let proverb_file = random_from(&proverb_files).unwrap_or_else(|| {
-        eprintln!("No fortune files found in the following directories:");
+        eprintln!("No fortune files found in any of the following directories:");
         for directory in source_directories() {
             eprintln!("{}", directory.display());
         }

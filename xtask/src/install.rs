@@ -5,7 +5,7 @@ use std::{
     env,
     fs::read_dir,
     io::{self, stdin},
-    path::PathBuf,
+    path::{Component, PathBuf},
     process::exit,
 };
 
@@ -58,6 +58,7 @@ fn run_elevated(command: &DisplayCmd) -> io::Result<()> {
 }
 
 pub(crate) fn install(args: Install) -> anyhow::Result<()> {
+    // TODO: non-unix
     let prefix = args
         .prefix
         .map(|path| path.into())
@@ -65,9 +66,25 @@ pub(crate) fn install(args: Install) -> anyhow::Result<()> {
         .ok_or_else(|| anyhow!("couldn't determine installation prefix"))?
         .canonicalize()?;
 
+    let dest_dir = args
+        .dest_dir
+        .unwrap_or_else(|| PathBuf::from("/"))
+        .canonicalize()?;
+
     env::set_var("PREFIX", &prefix);
 
-    // TODO: non-unix
+    // Since `prefix` was canonicalized, it is absolute.
+    // `dest_dir.join(prefix)` would just replace `dest_dir` with `prefix`.
+    // Skip the root (`/`) and the prefix (`C:` on Windows), then tack on
+    // `dest_dir`.
+    let prefix = {
+        let unrooted_prefix = prefix
+            .components()
+            .filter(|component| !matches!(component, Component::RootDir | Component::Prefix(_)))
+            .collect::<PathBuf>();
+
+        dest_dir.join(unrooted_prefix)
+    };
 
     let bin_dir = prefix.join("bin");
     let data_dir = prefix.join("share").join("proverb");
