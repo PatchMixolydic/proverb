@@ -12,6 +12,11 @@ directories = "3.0.2"
 rand = "0.8.4"
 textwrap = "0.14.2"
 
+[profile.release]
+codegen-units = 1
+lto = true
+panic = 'abort'
+
 [package.metadata.parcel]
 cargo-binaries = ["proverb"]
 pkg-data = ["proverb_files/*"]
