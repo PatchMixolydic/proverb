@@ -1,10 +1,13 @@
-[workspace]
-members = [
-    "proverb",
-    "xtask",
-]
+[package]
+name = "proverb"
+description = "Print a random, likely uninteresting, adage."
+license = "MIT OR Apache-2.0"
+version = "0.1.0"
+edition = "2018"
+default-run = "proverb"
 
-[profile.release]
-codegen-units = 1
-lto = true
-panic = 'abort'
+[dependencies]
+crossterm = "0.20.0"
+directories = "3.0.2"
+rand = "0.8.4"
+textwrap = "0.14.2"
