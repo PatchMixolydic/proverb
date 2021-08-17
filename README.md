@@ -8,25 +8,47 @@ terminal for your reading convenience.
 For debugging, simply use `cargo run`.
 
 **Important:** Since this crate relies on external data files, it does not
-support being installed by `cargo install`. If you do not wish to make a release
-build (`cargo build --release && strip target/release/proverb`) and install it
-yourself, please use `cargo xtask install`.
+support being installed by `cargo install`. Instead, it uses
+[`cargo parcel`](https://gitlab.com/rotty/cargo-parcel) for installation.
 
-`cargo xtask install` is intended to be simple to use. It takes one optional
-argument representing the installation prefix (ex.
-`cargo xtask install /usr/local` would install the binary to
-`/usr/local/bin/proverb`). If no argument is provided, the prefix is determined
-by the first non-empty value in this list (patterned after `cargo install`):
+To install `proverb` to `~/.local`, simply run `cargo parcel install`.
+You can change the installation destination using two optional arguments:
+
+* `--prefix DIR` sets the prefix for `proverb`'s install directories. For
+  example, `cargo parcel install --prefix /usr/local` will install the
+  `proverb` binary into `/usr/local/bin/proverb`. This is probably the
+  argument you want to set for a system-wide installation.
+* `--dest-dir DIR` will relocate the installation to another directory.
+  For instance, `cargo parcel install --prefix /usr/local --dest-dir build`
+  will intall the proverb binary into `./build/usr/local/bin/proverb`. This
+  is primarily useful for package maintainers.
+
+To install `proverb` systemwide when `cargo` isn't installed for `root`, use the
+following commands:
+```console
+$ # set --prefix to taste here
+$ cargo parcel install --prefix /usr/local --dest-dir ./target/stage
+$ # next two commands should be run as root
+# chown -R root:root ./target/stage
+# cp -ai ./target/stage/* / # be sure you've typed this correctly!
+```
+
+For more information on using `cargo parcel`, see
+[their CLI guide](https://gitlab.com/rotty/cargo-parcel/-/blob/master/docs/cli-guide.md).
+Note that `cargo parcel` currently does not seem to support non-Unix-like platforms.
+
+When built manually, the `proverb` binary will try to determine the installation
+prefix by the first non-empty value in this list (patterned after `cargo install`):
+* `$PARCEL_INSTALL_PREFIX`
 * `$PREFIX`
 * `$CARGO_INSTALL_ROOT`
 * `$CARGO_HOME`
 * `${HOME}/.cargo`
 
-When built manually, the `proverb` binary will use this same method to try and
-determine the installation prefix.
-
-Note that `cargo xtask install` does not currently support non-Unix-like
-platforms. Any help with improving platform support is welcome!
+If you wish to install `proverb` manually, you can build the binary using
+`PREFIX=/your/prefix/path cargo build --release && strip target/release/proverb`.
+Then, move `./target/release/proverb` into `$PREFIX/bin/` and the contents
+of `./proverb_files` into `$PREFIX/share/proverb/`.
 
 ## Data files
 Data files are similar to classic `fortune` strfiles:

@@ -10,7 +10,8 @@ use std::{
 };
 
 fn install_prefix() -> Option<Cow<'static, Path>> {
-    option_env!("PREFIX")
+    option_env!("PARCEL_INSTALL_PREFIX")
+        .or_else(|| option_env!("PREFIX"))
         .or_else(|| option_env!("CARGO_INSTALL_ROOT"))
         .or_else(|| option_env!("CARGO_HOME"))
         .map(|s| Path::new(s).into())

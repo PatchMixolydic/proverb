@@ -1,0 +1,12 @@
+[package]
+name = "parcel"
+version = "0.0.1"
+edition = "2018"
+publish = false
+
+[dependencies]
+cargo-parcel = "0.0.4"
+
+[profile.dev]
+# Disable debug info for faster builds, and less used diskspace.
+debug = false
