@@ -6,7 +6,7 @@ mod install;
 compile_error!("`proverb`'s `cargo xtask` currently doesn't support non-Unix-like systems");
 
 use clap::{AppSettings, Clap};
-use std::path::PathBuf;
+use install::Install;
 
 use crate::install::install;
 
@@ -20,19 +20,6 @@ struct Args {
 #[derive(Clap)]
 enum Subcommand {
     Install(Install),
-}
-
-#[derive(Clap)]
-#[clap(setting = AppSettings::ColoredHelp)]
-struct Install {
-    /// Don't run `cargo clean --release`.
-    /// 
-    /// This might result in unexpected behaviour.
-    /// Please be cautious!
-    #[clap(short, long)]
-    skip_clean: bool,
-
-    prefix: Option<PathBuf>,
 }
 
 fn main() -> anyhow::Result<()> {

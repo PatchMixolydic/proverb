@@ -12,10 +12,18 @@ support being installed by `cargo install`. If you do not wish to make a release
 build (`cargo build --release && strip target/release/proverb`) and install it
 yourself, please use `cargo xtask install`.
 
-`cargo xtask install` is intended to be simple to use. It takes one optional
-argument representing the installation prefix (ex.
-`cargo xtask install /usr/local` would install the binary to
-`/usr/local/bin/proverb`). If no argument is provided, the prefix is determined
+`cargo xtask install` is intended to be simple to use. It takes two optional
+arguments:
+* `--prefix` – the installation prefix. For example,
+`cargo xtask install --prefix /usr/local` would build the `proverb` binary for
+installation into `/usr/local/bin/proverb`.
+* `--dest-dir` – the root directory for the installation. For example,
+`cargo xtask install --prefix /usr/local --dest-dir ./stage` would build the
+`proverb` binary for installation into `/usr/local/bin/proverb`, but would place
+it in `./stage/usr/local/bin/proverb`. By default, this is set to `/`. This
+argument is primarily useful for package maintainers.
+
+If `--prefix` is not provided, the prefix is determined
 by the first non-empty value in this list (patterned after `cargo install`):
 * `$PREFIX`
 * `$CARGO_INSTALL_ROOT`

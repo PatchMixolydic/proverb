@@ -1,8 +1,47 @@
 use anyhow::anyhow;
+use clap::{AppSettings, Clap};
 use directories::BaseDirs;
-use std::{env, fs::read_dir, io::stdin, path::PathBuf, process::exit};
+use std::{
+    env,
+    fs::read_dir,
+    io::{self, stdin},
+    path::PathBuf,
+    process::exit,
+};
 
-use crate::Install;
+use crate::cmd::DisplayCmd;
+
+#[derive(Clap)]
+#[clap(setting = AppSettings::ColoredHelp)]
+pub(crate) struct Install {
+    /// Don't run `cargo clean --release`.
+    ///
+    /// This might result in unexpected behaviour.
+    /// Please be cautious!
+    #[clap(short, long)]
+    skip_clean: bool,
+
+    /// Installation prefix for this package.
+    ///
+    /// For instance,
+    /// `cargo xtask install --prefix /usr/local/`
+    /// would result in the `proverb` binary
+    /// being installed to `/usr/local/bin/proverb`.
+    #[clap(long)]
+    prefix: Option<PathBuf>,
+
+    /// Perform the installation as if the given directory
+    /// were the root directory.
+    ///
+    /// For instance,
+    /// `cargo xtask install --prefix /usr/local/ --dest-dir ./stage`
+    /// would result in the `proverb` binary being installed to
+    /// `./stage/usr/local/bin/proverb`. However, the library would be
+    /// built as if it would be installed to  `/usr/local`. This is useful
+    /// for package maintainers.
+    #[clap(long)]
+    dest_dir: Option<PathBuf>,
+}
 
 // TODO: non-unix
 fn install_prefix_from_env() -> Option<PathBuf> {
@@ -12,6 +51,10 @@ fn install_prefix_from_env() -> Option<PathBuf> {
         .map(|s| PathBuf::from(s))
         .ok()
         .or_else(|| Some(BaseDirs::new()?.home_dir().join(".cargo")))
+}
+
+fn run_elevated(command: &DisplayCmd) -> io::Result<()> {
+    command.clone().prepend("sudo").run()
 }
 
 pub(crate) fn install(args: Install) -> anyhow::Result<()> {
@@ -34,15 +77,7 @@ pub(crate) fn install(args: Install) -> anyhow::Result<()> {
         display_cmd!("cargo", "clean", "--release").run()?;
     }
 
-    display_cmd!(
-        "cargo",
-        "build",
-        "--release",
-        "--workspace",
-        "--exclude",
-        "xtask"
-    )
-    .run()?;
+    display_cmd!("cargo", "build", "--release",).run()?;
     display_cmd!("strip", "target/release/proverb").run()?;
 
     let install_bin = display_cmd!(
@@ -59,7 +94,7 @@ pub(crate) fn install(args: Install) -> anyhow::Result<()> {
         .filter_map(|maybe_file| maybe_file.map(|file| file.path()).ok());
 
     let install_data =
-        display_cmd!("install", "-m", "755", "-D", "-t", data_dir,).args(proverb_files);
+        display_cmd!("install", "-m", "644", "-D", "-t", data_dir).args(proverb_files);
 
     if install_bin.run().and_then(|_| install_data.run()).is_err() {
         eprint!(
@@ -78,11 +113,8 @@ pub(crate) fn install(args: Install) -> anyhow::Result<()> {
             exit(1);
         }
 
-        install_bin
-            .clone()
-            .prepend("sudo")
-            .run()
-            .and_then(|_| install_data.clone().prepend("sudo").run())
+        run_elevated(&install_bin)
+            .and_then(|_| run_elevated(&install_data))
             .unwrap_or_else(|_| {
                 eprintln!(
                     "Failed to either elevate permissions or install into `{}`.",
