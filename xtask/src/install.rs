@@ -27,7 +27,7 @@ pub(crate) struct Install {
     /// `cargo xtask install --prefix /usr/local/`
     /// would result in the `proverb` binary
     /// being installed to `/usr/local/bin/proverb`.
-    #[clap(long)]
+    #[clap(short, long)]
     prefix: Option<PathBuf>,
 
     /// Perform the installation as if the given directory
@@ -39,7 +39,7 @@ pub(crate) struct Install {
     /// `./stage/usr/local/bin/proverb`. However, the library would be
     /// built as if it would be installed to  `/usr/local`. This is useful
     /// for package maintainers.
-    #[clap(long)]
+    #[clap(short, long)]
     dest_dir: Option<PathBuf>,
 }
 
