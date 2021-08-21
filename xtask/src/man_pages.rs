@@ -19,8 +19,9 @@ pub(crate) struct ManPages {
     ///
     /// For instance,
     /// `cargo xtask man_pages --prefix /usr/local/`
-    /// would result in the manual page being installed
-    /// to `/usr/local/share/man/man6/proverb.1.gz`.
+    /// would result in the manual page being generated
+    /// under the assumption that `proverb` will be installed
+    /// to `/usr/local`.
     #[clap(short, long)]
     prefix: Option<PathBuf>,
 }
