@@ -60,6 +60,7 @@ fn wrap_if_needed<'a>(s: &'a str) -> Cow<'a, str> {
                 res.push_str(&wrapped_line);
                 res.push_str("\n");
             }
+            // Remove the last newline
             res.pop();
             res.into()
         }
