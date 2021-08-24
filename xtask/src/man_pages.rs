@@ -108,7 +108,7 @@ pub(crate) fn man_pages(args: ManPages) -> anyhow::Result<()> {
         .section(
             "name",
             &[
-                "proverb files - contain various, likely uninteresting, adages for ".into(),
+                "proverb-files - contain various, likely uninteresting, adages for ".into(),
                 bold("proverb"),
                 "(6)".into(),
             ],
