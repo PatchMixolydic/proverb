@@ -12,8 +12,8 @@ use textwrap::Options;
 
 fn install_prefix() -> Option<Cow<'static, Path>> {
     option_env!("PREFIX")
-        .or_else(|| option_env!("CARGO_INSTALL_ROOT"))
-        .or_else(|| option_env!("CARGO_HOME"))
+        .or(option_env!("CARGO_INSTALL_ROOT"))
+        .or(option_env!("CARGO_HOME"))
         .map(|s| Path::new(s).into())
         .or_else(|| Some(BaseDirs::new()?.home_dir().join(".cargo").into()))
 }
@@ -56,9 +56,10 @@ fn wrap_if_needed<'a>(s: &'a str) -> Cow<'a, str> {
         Ok((width, _)) => {
             let mut res = String::new();
             for line in s.lines() {
-                let wrapped_line = textwrap::fill(line, Options::new(width as usize).subsequent_indent("  "));
+                let wrapped_line =
+                    textwrap::fill(line, Options::new(width as usize).subsequent_indent("  "));
                 res.push_str(&wrapped_line);
-                res.push_str("\n");
+                res.push('\n');
             }
             // Remove the last newline
             res.pop();
