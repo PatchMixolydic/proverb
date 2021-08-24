@@ -8,6 +8,7 @@ use std::{
     path::Path,
     process::exit,
 };
+use textwrap::Options;
 
 fn install_prefix() -> Option<Cow<'static, Path>> {
     option_env!("PREFIX")
@@ -52,7 +53,17 @@ fn wrap_if_needed<'a>(s: &'a str) -> Cow<'a, str> {
     }
 
     match terminal::size() {
-        Ok((width, _)) => textwrap::fill(s, width as usize).into(),
+        Ok((width, _)) => {
+            let mut res = String::new();
+            for line in s.lines() {
+                let wrapped_line = textwrap::fill(line, Options::new(width as usize).subsequent_indent("  "));
+                res.push_str(&wrapped_line);
+                res.push_str("\n");
+            }
+            res.pop();
+            res.into()
+        }
+
         Err(_) => s.into(),
     }
 }
