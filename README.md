@@ -82,9 +82,3 @@ of this project, still appear to permitted by the aforementioned guidelines.
 [`./proverb_files/touhou`]: https://github.com/PatchMixolydic/proverb/blob/main/proverb_files/touhou
 [Guidelines for Touhou Project Fan Creators]: https://touhou-project.news/guidelines_en/
 [archived]: https://web.archive.org/web/20210607213949/https://touhou-project.news/guidelines_en/
-
-## Where are the offensive proverbs?
-no
-
-<small>(These proverb files *do*, however, contain swear words, which might be
-inappropriate for younger audiences.)</small>
